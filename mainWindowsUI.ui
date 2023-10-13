@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="generarReporte">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>330</x>
       <y>330</y>
       <width>111</width>
       <height>31</height>
@@ -30,7 +30,7 @@
    <widget class="QPushButton" name="borrarButton">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>230</x>
       <y>290</y>
       <width>101</width>
       <height>31</height>
@@ -63,7 +63,7 @@ QPushButton:hover#pushButton_4{
    <widget class="QPushButton" name="examinarButton">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>340</x>
       <y>290</y>
       <width>101</width>
       <height>31</height>
@@ -97,7 +97,7 @@ background-color: #4181e8;
    <widget class="QPushButton" name="agregarButton">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>120</x>
       <y>290</y>
       <width>101</width>
       <height>31</height>

@@ -44,36 +44,37 @@ app.layout = html.Div([
     ),
     
     html.Div(id='output-data-upload'),
-    html.Button('Generar reportes', id='procesarPDF-button'),
+    html.Div(id="imgCointainer", className="imgContainer"),
+    html.Div([
+        dbc.Button('Generar reportes', color="success", id='procesarPDF-button', disabled=True),
+        dcc.Loading(
+                id="loading-2",
+                children=[html.Div([html.Div(id="loading-output-2")])],
+                type="circle",
+            ),
+        dbc.Button('Descargar Excel', color="success", id='download-excel-button', disabled=True),
+    ],className="d-grid gap-2 col-6 mx-auto"),
+    
     dcc.Download(id="download-csv"), 
-    html.Div(
-            [
-                dcc.Loading(
-                    id="loading-2",
-                    children=[html.Div([html.Div(id="loading-output-2")])],
-                    type="circle",
-                )
-            ]
-        ),
-    html.Button('Descargar Excel', id='download-excel-button'),
+    
     html.Div(id='output-excel')
 ])
 outFiles = []
 
+files = []
+k = 0
+
+
 @app.callback(
-    Output('output-excel', 'children'),
-    Output('download-excel-button', 'style'),
+    Output('imgCointainer', 'children'),
+    Output('procesarPDF-button', 'disabled'),
     Input('upload-data', 'contents'),
-    Input('procesarPDF-button', 'n_clicks')
+    State('upload-data', 'filename'),
 )
-def process_and_generate_excel(contents, n_clicks):
+def uploadFiles(contents, filename):
     if not contents:
         raise PreventUpdate
-
-    if n_clicks is None:
-        raise PreventUpdate
-
-    files = []
+    divs = []
     i = 0
     for pdf_content in contents:
         try:
@@ -87,17 +88,35 @@ def process_and_generate_excel(contents, n_clicks):
             print("Error inesperado:", str(e))
             
         files.append("archivo"+str(i)+".pdf")
-        i+=1
+        i +=1
+    for imgName in filename:
+        div = html.Div([
+                html.P(imgName),
+                html.Img(src=app.get_asset_url('Icon_pdf_file.pdf')),  
+        ])
+
+        divs.append(div)
+    k = i
+    return divs, False
+
+@app.callback(
+    Output('output-excel', 'children'),
+    Output('download-excel-button', 'style'),
+    Output('download-excel-button', 'disabled'),
+    Output("loading-output-2", "children"),
+    Input('procesarPDF-button', 'n_clicks')
+)
+def generate_excel(n_clicks):
+    if not n_clicks:
+        raise PreventUpdate
     out = pdScrap.crearReporte(files, "")
 
     outFiles.append(out)
 
-
-    for j in range(i-1, -1, -1):
+    for j in range(k-1, -1, -1):
         os.remove("archivo"+str(j)+".pdf")
 
-
-    return 'Archivo Excel generado con éxito.', {'display': 'block'}
+    return 'Archivo Excel generado con éxito.', {'display': 'block'}, False, None
 
 
 @callback(
