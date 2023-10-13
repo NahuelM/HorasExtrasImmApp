@@ -3,6 +3,5 @@ dash_bootstrap_components
 pandas
 gunicorn
 numpy
-binascii
 base64
 tabula
