@@ -44,7 +44,7 @@ app.layout = html.Div([
     ),
     
     html.Div(id='output-data-upload'),
-    html.Div(id="imgCointainer", className="imgContainer"),
+    html.Div(id="imgContainer",style={"display": "flex"}),
     html.Div([
         dbc.Button('Generar reportes', color="success", id='procesarPDF-button', disabled=True),
         dcc.Loading(
@@ -66,7 +66,7 @@ k = 0
 
 
 @app.callback(
-    Output('imgCointainer', 'children'),
+    Output('imgContainer', 'children'),
     Output('procesarPDF-button', 'disabled'),
     Input('upload-data', 'contents'),
     State('upload-data', 'filename'),
@@ -76,24 +76,31 @@ def uploadFiles(contents, filename):
         raise PreventUpdate
     divs = []
     i = 0
+    app.logger.log(level=0,  msg="CONSOLAAAA")    
     for pdf_content in contents:
         try:
             decoded_data = base64.b64decode(pdf_content.split(",")[1])
+            #app.logger.info(decoded_data)
             with open("archivo"+str(i)+".pdf", "wb") as pdf_file:
                 pdf_file.write(decoded_data)
-            print("PDF exportado con éxito.")
+            #print("PDF exportado con éxito.")
+            app.logger.info("PDF exportado con éxito.")
         except binascii.Error as e:
-            print("Error al decodificar la cadena base64:", str(e))
+            #print("Error al decodificar la cadena base64:", str(e))
+            app.logger.info("Error al decodificar la cadena base64:", str(e))
+
         except Exception as e:
-            print("Error inesperado:", str(e))
+            #print("Error inesperado:", str(e))
+            app.logger.info("Error inesperado:", str(e))
             
         files.append("archivo"+str(i)+".pdf")
         i +=1
     for imgName in filename:
         div = html.Div([
                 html.P(imgName),
-                html.Img(src=app.get_asset_url('Icon_pdf_file.pdf')),  
-        ])
+                html.Img(src='https://upload.wikimedia.org/wikipedia/commons/3/38/Icon_pdf_file.svg'),  
+        ], className="myCard", style={'border': '2px solid gray', 
+                                      'borderRadius': '5px'})
 
         divs.append(div)
     k = i
@@ -110,7 +117,6 @@ def generate_excel(n_clicks):
     if not n_clicks:
         raise PreventUpdate
     out = pdScrap.crearReporte(files, "")
-
     outFiles.append(out)
 
     for j in range(k-1, -1, -1):
