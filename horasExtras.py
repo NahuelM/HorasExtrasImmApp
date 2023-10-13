@@ -5,9 +5,22 @@ import os
 import base64
 import pandas as pd
 from dash.exceptions import PreventUpdate
+from flask import send_from_directory
+import dash_bootstrap_components as dbc
 import pdf_Scraper as pdScrap
 import binascii
-app = dash.Dash(__name__)
+external_stylesheets = [
+    {
+        'href': 'styles.css',
+        'rel': 'stylesheet'
+    }
+]
+
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, {
+        'href': '../static/styles.css',
+        'rel': 'stylesheet'
+}, dbc.icons.BOOTSTRAP], title='HorasExtras')
+server = app.server
 
 app.layout = html.Div([
     dcc.Upload(
@@ -71,6 +84,7 @@ def process_and_generate_excel(contents, n_clicks):
 
 
     for j in range(i, 0):
+        print("remove")
         os.remove("archivo"+str(j)+".pdf")
 
 
