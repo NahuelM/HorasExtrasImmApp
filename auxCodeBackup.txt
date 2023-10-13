@@ -1,0 +1,50 @@
+from PyQt5.QtCore import Qt, QModelIndex
+from PyQt5.QtWidgets import *
+import pdf_Scraper as pdfScrap
+import subprocess 
+import os
+
+
+ def examinar3(self):
+        model = QtGui.QStandardItemModel()
+        files_names = QFileDialog.getOpenFileNames(filter='*.pdf')
+        self.listView.setModel(model)
+        for i in files_names[0]:
+            item = QtGui.QStandardItem(i)
+            model.appendRow(item)
+
+
+    def generarReport_pdf(self):
+        app.setOverrideCursor(Qt.WaitCursor)
+        files = []
+        path_destino = self.lineEdit_2.text() if self.lineEdit_2.text().strip() != '' else os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+        try:
+            model = self.listView.model()
+            for i in range(model.rowCount()):
+                index =  model.index(i, 0, QModelIndex())
+                files.append(model.data(index))
+            pdfScrap.crearReporte(files, path_destino)
+            
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText('Reporte generado en: ' + path_destino)
+            msg.setWindowTitle("Information")
+            msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            #ui.label.setText('Reporte generado en: ' + self.lineEdit_2.text())
+            msg.exec_()
+            subprocess.Popen([path_destino+'/Reporte.pdf'],shell=True)
+        except Exception as ex:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Critical)
+            msg.setText(f"Unexpected {ex=}, {type(ex)=}")
+            msg.setWindowTitle("Error")
+            msg.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            #ui.label.setText('Error' + f"Unexpected {ex=}, {type(ex)=}")
+            msg.exec_()
+        app.restoreOverrideCursor()
+
+
+
+
+self.examinarButton.clicked.connect(self.examinar3)
+self.generarReporte.clicked.connect(self.generarReport_pdf)
