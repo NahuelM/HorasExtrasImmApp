@@ -17,7 +17,7 @@ external_stylesheets = [
 ]
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, {
-        'href': '../static/styles.css',
+        'href': 'styles.css',
         'rel': 'stylesheet'
 }, dbc.icons.BOOTSTRAP], title='HorasExtras')
 server = app.server
@@ -42,9 +42,19 @@ app.layout = html.Div([
         # Allow multiple files to be uploaded
         multiple=True
     ),
+    
     html.Div(id='output-data-upload'),
     html.Button('Generar reportes', id='procesarPDF-button'),
     dcc.Download(id="download-csv"), 
+    html.Div(
+            [
+                dcc.Loading(
+                    id="loading-2",
+                    children=[html.Div([html.Div(id="loading-output-2")])],
+                    type="circle",
+                )
+            ]
+        ),
     html.Button('Descargar Excel', id='download-excel-button'),
     html.Div(id='output-excel')
 ])
@@ -75,16 +85,15 @@ def process_and_generate_excel(contents, n_clicks):
             print("Error al decodificar la cadena base64:", str(e))
         except Exception as e:
             print("Error inesperado:", str(e))
+            
         files.append("archivo"+str(i)+".pdf")
         i+=1
     out = pdScrap.crearReporte(files, "")
 
-    for k in range (0, len(out)):
-        outFiles.append(out[k])
+    outFiles.append(out)
 
 
-    for j in range(i, 0):
-        print("remove")
+    for j in range(i-1, -1, -1):
         os.remove("archivo"+str(j)+".pdf")
 
 

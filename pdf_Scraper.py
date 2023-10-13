@@ -197,6 +197,9 @@ def crearReporte(files_raw, pathDestino)->list:
 
                 redondeado = x + 1 if y >= 0.5 else x
                 #print(resultado_formateado)
+                # myDict = {'Servicio: ' +str(j)}
+                # nueva_fila = pd.DataFrame([myDict])
+                #dfOut = pd.concat([dfOut, nueva_fila], ignore_index=True)
                 myDict = {'Cedula':cedulas[i], 
                           'Nombre':nombres[i], 
                           'Horas trabajadas en la semana':str(tiempo1), 
@@ -208,21 +211,6 @@ def crearReporte(files_raw, pathDestino)->list:
                 nueva_fila = pd.DataFrame([myDict])
                 dfOut = pd.concat([dfOut, nueva_fila], ignore_index=True)
 
-        #nueva_fila = pd.DataFrame("Total horas extras: " + str(totalHorasExtras))
-        #dfOut = pd.concat([dfOut, nueva_fila], ignore_index=True)
 
-        dfOutput.append(dfOut)
-
-    # for i in range (0, len(dfOutput)):
-    #     dfOutput[i].to_csv("reporteHorasExtras"+str(i)+".csv")
-    # wb= Workbook()
-    # ws=wb.active
-    # with pd.ExcelWriter('reporteHorasExtras.xlsx', engine="openpyxl") as writer:
-    #     writer.book=wb
-    #     writer.sheets = dict((ws.title, ws) for ws in wb.worksheets)
-    #     for i in dfOutput:
-    #         dfOutput[i].to_excel(writer, sheet_name='Hoja'+str(i), index=False)
-    #         writer.save()
     
-    return dfOutput
-    #dfOut.to_excel("reporteHorasExtras.xlsx")
+    return dfOut
