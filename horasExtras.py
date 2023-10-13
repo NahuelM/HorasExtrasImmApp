@@ -17,7 +17,7 @@ external_stylesheets = [
 ]
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, {
-        'href': '../static/styles.css',
+        'href': 'styles.css',
         'rel': 'stylesheet'
 }, dbc.icons.BOOTSTRAP], title='HorasExtras')
 server = app.server
