@@ -1,0 +1,6 @@
+dash==2.7.1
+dash_bootstrap_components
+pandas
+gunicorn
+numpy
+tabula
