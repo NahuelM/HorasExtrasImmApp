@@ -3,4 +3,4 @@ dash_bootstrap_components
 pandas
 gunicorn
 numpy
-tabula
+tabula-py

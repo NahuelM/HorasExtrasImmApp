@@ -1,4 +1,4 @@
-import dash
+import dash 
 from dash import Dash, dcc, html, dash_table, Input, Output, State, callback
 from dash.dependencies import Input, Output
 import os
@@ -76,24 +76,20 @@ def uploadFiles(contents, filename):
         raise PreventUpdate
     divs = []
     i = 0
-    app.logger.log(level=0,  msg="CONSOLAAAA")    
+
     for pdf_content in contents:
         try:
             decoded_data = base64.b64decode(pdf_content.split(",")[1])
-            #app.logger.info(decoded_data)
-            with open("archivo"+str(i)+".pdf", "wb") as pdf_file:
+            with open("/temp/archivo"+str(i)+".pdf", "wb") as pdf_file:
                 pdf_file.write(decoded_data)
-            #print("PDF exportado con éxito.")
             app.logger.info("PDF exportado con éxito.")
         except binascii.Error as e:
-            #print("Error al decodificar la cadena base64:", str(e))
             app.logger.info("Error al decodificar la cadena base64:", str(e))
 
         except Exception as e:
-            #print("Error inesperado:", str(e))
             app.logger.info("Error inesperado:", str(e))
             
-        files.append("archivo"+str(i)+".pdf")
+        files.append("/temp/archivo"+str(i)+".pdf")
         i +=1
     for imgName in filename:
         div = html.Div([
@@ -120,7 +116,7 @@ def generate_excel(n_clicks):
     outFiles.append(out)
 
     for j in range(k-1, -1, -1):
-        os.remove("archivo"+str(j)+".pdf")
+        os.remove("/temp/archivo"+str(j)+".pdf")
 
     return 'Archivo Excel generado con éxito.', {'display': 'block'}, False, None
 
